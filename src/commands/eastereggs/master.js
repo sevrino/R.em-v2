@@ -22,7 +22,7 @@ class Master extends Command {
         } else if (msg.author.id == 206229047951360000) {
             msg.channel.createMessage('Sorry, my Master is someone else...');
             setTimeout(function () {
-                msg.channel.createMessage('*Hey... It\'s a secret, but I think Ram likes you* :wink~1:');
+                msg.channel.createMessage('*Hey... It\'s a secret, but I think Ram likes you* :blush: ');
                 setTimeout(function() {
                     msg.channel.createMessage('*Here, I secretly took this picture when she was asleep...* https://goo.gl/bn8Bxh');
                 }, 5000);
