@@ -10,3 +10,6 @@ cmd.bat
 .env
 /dist
 .env-safe
+build.sh
+deploy.sh
+logs.sh
