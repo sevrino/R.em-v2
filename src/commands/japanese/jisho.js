@@ -53,13 +53,13 @@ class Jisho extends Command {
 
             if (result["senses"].length > 5) {
                 result["senses"].splice(5);
-                embed["content"] = "(This word has too many meanings, please visit [Jisho](http://jisho.org/search/" + encodeURIComponent(keyword) + ") for more information)";
+                embed["embed"]["description"] = "*This word has too many meanings*\n*Please visit the [Jisho result page](http://jisho.org/search/" + encodeURIComponent(keyword) + ") for more information*";
             }
 
             for (var i = 0; i < result["senses"].length; ++i) {
                 embed["embed"]["fields"].push({
-                    "name": (i + 1) + ".",
-                    "value": result["senses"][i]["english_definitions"].join("; "),
+                    "name": (i + 1) + ". " + result["senses"][i]["english_definitions"].splice(0, 1),
+                    "value": "\u200b" + result["senses"][i]["english_definitions"].join("; "),
                     "inline": true
                 });
             }
