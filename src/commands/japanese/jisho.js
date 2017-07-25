@@ -5,7 +5,7 @@ class Jisho extends Command {
     constructor({t}) {
         super();
         this.cmd = 'jisho';
-        this.cat = 'fun';
+        this.cat = 'japanese';
         this.needGuild = false;
         this.t = t;
         this.accessLevel = 0;
