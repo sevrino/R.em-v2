@@ -58,7 +58,8 @@
     "winston-daily-rotate-file": "^1.4.6",
     "ws": "^3.0.0",
     "youtube-dl": "^1.11.1",
-    "ytdl-core": "^0.14.4"
+    "ytdl-core": "^0.14.4",
+    "pn": "1.0.0"
   },
   "devDependencies": {},
   "optionalDependencies": {
