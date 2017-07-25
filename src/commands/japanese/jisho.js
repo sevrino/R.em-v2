@@ -51,6 +51,11 @@ class Jisho extends Command {
                 embed["embed"]["fields"][0]["value"] += "*" + result["senses"][0]["parts_of_speech"].join(", ") + "*";
             }
 
+            if (result["senses"].length > 5) {
+                result["senses"].splice(5);
+                embed["content"] = "(This word has too many meanings, please visit [Jisho](http://jisho.org/search/" + encodeURIComponent(keyword) + ") for more information)";
+            }
+
             for (var i = 0; i < result["senses"].length; ++i) {
                 embed["embed"]["fields"].push({
                     "name": (i + 1) + ".",
