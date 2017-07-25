@@ -31,10 +31,10 @@ class Jisho extends Command {
                         "icon_url": "http://assets.jisho.org/assets/jisho-logo-v4@2x-7330091c079b9dd59601401b052b52e103978221c8fb6f5e22406d871fcc746a.png"
                     },
                     "fields": [
-                      {
-                        "name": "",
-                        "value": "(common word) *Noun*"
-                      }
+                        {
+                            "name": "",
+                            "value": ""
+                        }
                     ]
                 }
             };
@@ -44,6 +44,21 @@ class Jisho extends Command {
             } else {
                 embed["embed"]["fields"][0]["name"] = result["japanese"][0]["reading"];
             }
+
+            embed["embed"]["fields"][0]["value"] += result["is_common"] ? "(common word) " : "(uncommon word) ";
+
+            if (result["senses"][0]["parts_of_speech"].length > 0) {
+                embed["embed"]["fields"][0]["value"] += "*" + result["senses"][0]["parts_of_speech"].join(", ") + "*";
+            }
+
+            for (var i = 0; i < result["senses"].length; ++i) {
+                embed["embed"]["fields"].push({
+                    "name": (i + 1) + ".",
+                    "value": result["senses"][i]["english_definitions"].join("; "),
+                    "inline": true
+                });
+            }
+
             return embed;
         }
 
