@@ -27,7 +27,6 @@
     "babel-cli": "^6.24.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-latest": "^6.24.1",
-    "better-cleverbot-io": "^1.0.2",
     "blocked": "^1.2.1",
     "bluebird": "^3.5.0",
     "docker-config-loader": "^1.0.0",
@@ -59,7 +58,8 @@
     "ws": "^3.0.0",
     "youtube-dl": "^1.11.1",
     "ytdl-core": "^0.14.4",
-    "pn": "1.0.0"
+    "pn": "1.0.0",
+    "cleverbot": "1.0.1"
   },
   "devDependencies": {},
   "optionalDependencies": {
