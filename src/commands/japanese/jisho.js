@@ -2,7 +2,7 @@ let Command = require('../../structures/command');
 let request = require('request');
 
 
-function jishoEmbed(keyword, result) {
+function jishoEmbed(keyword, result, more) {
     var embed = {
         'embed': {
             'title': 'Result for “' + keyword + '”',
@@ -59,6 +59,13 @@ function jishoEmbed(keyword, result) {
         });
     }
 
+    if (more > 0) {
+        embed['embed']['fields'].push({
+            'name': '\u200b',
+            'value': 'There are ' + (more - 1) + ' other results, use `!w.jisho [number] [keywords]` to see them.'
+        });
+    }
+
     return embed;
 }
 
@@ -108,7 +115,8 @@ class Jisho extends Command {
                     if (typeof body !== 'undefined') {
                         index = index - 1;
                         if (body.length > 0 && index < body.length && index >= 0) {
-                            msg.channel.createMessage(jishoEmbed(keyword, body[index]));
+                            let more = index < body.length - 1 ? body.length : 0;
+                            msg.channel.createMessage(jishoEmbed(keyword, body[index], more));
                             return;
                         }
                     }
