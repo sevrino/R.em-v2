@@ -224,7 +224,7 @@ class Shard {
                 }
                 let embed = {
                     "embed": {
-                        "description": "Message edited by <@" + message.author.id + "> in <#" + message.channel.id + ">",
+                        "description": "**Message edited by** <@" + message.author.id + "> **in** <#" + message.channel.id + ">",
                         "color": 14019058,
                         "timestamp": (new Date()).toISOString(),
                         "footer": {
