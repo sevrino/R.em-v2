@@ -60,9 +60,10 @@ function jishoEmbed(keyword, result, more) {
     }
 
     if (more > 0) {
+        var plural = (more == 2) ? '' : 's';
         embed['embed']['fields'].push({
             'name': '\u200b',
-            'value': 'There are ' + (more - 1) + ' other results, use `!w.jisho [number] [keywords]` to see them.'
+            'value': '(' + (more - 1) + ' other result' + plural + ': use `!w.jisho [number] query`)'
         });
     }
 
@@ -76,7 +77,11 @@ class Jisho extends Command {
         this.cat = 'japanese';
         this.needGuild = false;
         this.t = t;
-        this.accessLevel = 0;
+        this.help = {
+            short: 'help.jisho.short',
+            usage: 'help.jisho.usage',
+            example: 'help.jisho.example'
+        }
     }
 
     run(msg) {
