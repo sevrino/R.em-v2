@@ -43,8 +43,34 @@ Place `main.json` and `keys.json` (format [below](#configuration-format)) in a f
     - Use `scripts/convert_kanjidic2.py` to convert it to a more convenient format
     - Place output in `kanji/kanji.json`
 
+## Building, running and deploying
 
-### Configuration format
+To build:
+
+```sh
+git submodule init
+git submodule update
+docker build -t "registry.heroku.com/[app-id]/web" .
+```
+
+To run locally (add `-d` to run in the background):
+
+```
+docker run -ti "registry.heroku.com/[app-id]/web"
+```
+
+To deploy:
+
+```
+heroku login
+heroku plugins:install heroku-container-registry
+heroku container:login
+heroku container:push web -a [app-id]
+```
+
+The container includes its own MongoDB server, but since it would get reset at each deploy, using the free MongoDB plugin offered by Heroku is a better idea.
+
+## Configuration format
 
 `config/main.json` (remove comments if copy/pasting):
 
