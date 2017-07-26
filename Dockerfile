@@ -18,17 +18,16 @@ RUN cd /tmp && \
     make install && \
     rm -rf /tmp/mecab*
 
-
 COPY package.json package-lock.json /rem-v2/
 
 WORKDIR /rem-v2
 RUN npm install
 
-COPY . /rem-v2/
 RUN mkdir temp audio db
-COPY ./config/keys.json ./config/main.json config/
-
-COPY ./src/dummy.js /
-COPY ./src/run.sh /
+COPY kanji/ kanji/
+COPY config/ config/
+COPY src/run.sh src/dummy.js /
+COPY rem_translate/ rem_translate/
+COPY src/ src/
 
 CMD /run.sh
