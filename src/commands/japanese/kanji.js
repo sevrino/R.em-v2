@@ -4,6 +4,51 @@ let pnfs = require("pn/fs");
 let fs = require("fs");
 
 var files = fs.readdirSync("../kanji/");
+var dictionary = JSON.parse(fs.readFileSync("../kanji/kanji.json"));
+
+function kanjiEmbed(entry) {
+    var meanings = [];
+    for (var i = 0; i < entry["meanings"].length; ++i) {
+        var meaning = entry["meanings"][i];
+        if (!meaning["m_lang"]) {
+            meanings.push(meaning["meaning"]);
+        }
+    }
+    var strokes = entry["stroke_count"] + " stroke" + (entry["stroke_count"] > 1 ? "s" : "");
+    var jlpt = entry["jlpt"] ? "`JLPT N" + entry["jlpt"] + "` ": " ";
+    var grade = entry["grade"] ? "`Grade " + entry["grade"] + "`": "";
+    var embed = {
+        "embed": {
+            "title": meanings.join("; "),
+            "description": strokes + "\n" + jlpt + grade,
+            "color": 16044806,
+            "footer": {
+                "text": "Information taken from KANJIDIC2 by the EDRDG"
+            },
+            "author": {
+                "name": entry["literal"]
+            },
+            "fields": []
+        }
+    };
+    var kun = [];
+    var on = [];
+    for (var i = 0; i < entry["readings"].length; ++i) {
+        var reading = entry["readings"][i];
+        if (reading["r_type"] == "ja_kun") {
+            kun.push(reading["reading"]); 
+        } else if (reading["r_type"] == "ja_on") {
+            on.push(reading["reading"]);
+        }
+    }
+    if (kun) {
+        embed["embed"]["fields"].push({"name": "Kun:", "value": kun.join(", "), "inline": true});
+    }
+    if (kun) {
+        embed["embed"]["fields"].push({"name": "On:", "value": on.join(", "), "inline": true});
+    }
+    return embed;
+}
 
 class Kanji extends Command {
     constructor({t}) {
@@ -31,7 +76,7 @@ class Kanji extends Command {
         }
 
         pnfs.readFile("../kanji/" + kanjiFile)
-            .then(buffer => msg.channel.createMessage(":information_source: Here is the stroke order for 「" + kanji + "」:" , {
+            .then(buffer => msg.channel.createMessage(kanjiEmbed(dictionary[kanji]) , {
                 "file": buffer,
                 "name": kanji + ".gif"
             }))
