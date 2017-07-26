@@ -217,8 +217,9 @@ class Shard {
     messageUpdate(message, oldMessage) {
         if (this.ready) {
             if (message.channel.guild.id == "203238995117867008" && message.author) {
-                if (message && !message.content && oldMessage && !oldMessage.content) {
+                if (message && oldMessage && (!message.content && !oldMessage.content || message.content == oldMessage.content)) {
                     // both messages have empty content, this is an Embed "edit"
+                    // both messages have same content, this is Discord adding an Embed to a link
                     return;
                 }
                 let embed = {
