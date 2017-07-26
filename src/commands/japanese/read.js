@@ -35,7 +35,12 @@ class Read extends Command {
         this.cat = 'japanese';
         this.needGuild = false;
         this.t = t;
-        this.accessLevel = 0;
+        this.help = {
+            short: 'help.read.short',
+            usage: 'help.read.usage',
+            example: 'help.read.example'
+        }
+
     }
 
     run(msg) {
