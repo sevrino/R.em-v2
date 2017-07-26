@@ -16,12 +16,17 @@ class CleverBotManager extends Manager {
 
     talk(msg) {
         var message = msg.content.replace(re, '');
+        var continuationString = this.continuationStrings[msg.channel.id];
+
+        if (continuationString && continuationString.length > 2000) {
+            msg.channel.createMessage("I am having trouble remembering this conversation... Let's start over!");
+            this.continuationStrings[msg.channel.id] = undefined;
+            return;
+        }
+
         this.cleverbot
-            .query(message, {'cs': this.continuationStrings[msg.channel.id]})
+            .query(message, {'cs': continuationString})
             .then(response => {
-                console.log("[cleverbot] msg-in: " + message);
-                console.log("[cleverbot] cs-in: " + this.continuationStrings[msg.channel.id]);
-                console.log("[cleverbot] cs-out: " + response.cs);
                 msg.channel.createMessage(':pencil: ' + response.output);
                 this.continuationStrings[msg.channel.id] = response.cs;
             })
