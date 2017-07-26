@@ -15,9 +15,16 @@
   
 -------------------
 
-## Contibuting Guidelines
+## Additional requirements:
 
-I will write those if people actually want to contribute. Until then: Just make it work good and fast. uwu
+- KanjiVG main SVGs: https://github.com/KanjiVG/kanjivg/releases
+  - Produce animation gifs with Kanimaji https://github.com/maurimo/kanimaji
+  - Use the default settings, except with a white background and only produce gifs
+  - Use batch script to convert all svgs (takes about 20 hours on a MBP 2016)
+  - Compress to a `.tar.gz` and put in `kanji/`
+- JSON version of kanjidic2: https://github.com/shawnps/kanjidic2-json
+  - Use script to convert to a more convenient format
+  - Put in `kanji/`
 
 ## Requirements:
 * Node and NPM
