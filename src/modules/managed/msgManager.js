@@ -100,6 +100,12 @@ class MessageManager extends Manager {
                             msg.prefix = Guild.prefix;
                             msg.aliases = this.aliases;
                             let node = `${command.cat}.${command.cmd}`;
+
+                            if (msg.channel.id === "203238995117867008" && msg.author.id !== remConfig.owner_id) {
+                                if (command.cat != "japanese")
+                                    return;
+                            } 
+
                             try {
                                 await this.p.checkPermission(msg, node);
                             } catch (e) {

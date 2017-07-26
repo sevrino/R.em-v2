@@ -84,7 +84,7 @@ class Shard {
         const options = {
             autoreconnect: true,
             compress: true,
-            messageLimit: 0,
+            messageLimit: 400,
             disableEveryone: true,
             getAllUsers: false,
             firstShardID: parseInt(this.id),
@@ -94,7 +94,6 @@ class Shard {
                 'TYPING_START': true,
                 'TYPING_STOP': true,
                 'GUILD_MEMBER_SPEAKING': true,
-                'MESSAGE_UPDATE': true,
                 'MESSAGE_DELETE': true
             },
             crystal: useCrystal
@@ -138,13 +137,16 @@ class Shard {
                 this.HUB.send({action: 'updateState', d: {state: 'discord_ready'}});
             }
             // console.log('READY!');
-            this.bot.editStatus('online', {name: '!w.help for commands'});
+            this.bot.editStatus('online', {name: 'Long Live Tenchi!'});
             this.clientReady();
         });
         this.bot.on('messageCreate', (msg) => {
             dogstatsd.increment(`${stat}.messages`);
             msg.CON = this.CON;
             this.message(msg);
+        });
+        this.bot.on('messageUpdate', (message, oldMessage) => {
+            this.messageUpdate(message, oldMessage);
         });
         this.bot.on('guildCreate', (Guild) => {
             this.guildCreate(Guild);
@@ -209,6 +211,43 @@ class Shard {
         if (this.ready && !msg.author.bot) {
             this.CON.invokeAllCollectors(msg);
             this.MSG.check(msg);
+        }
+    }
+
+    messageUpdate(message, oldMessage) {
+        if (this.ready) {
+            if (message.channel.guild.id == "203238995117867008" && message.author) {
+                if (message && !message.content && oldMessage && !oldMessage.content) {
+                    // both messages have empty content, this is an Embed "edit"
+                    return;
+                }
+                let embed = {
+                    "embed": {
+                        "description": "Message edited by <@" + message.author.id + "> in <#" + message.channel.id + ">",
+                        "color": 14019058,
+                        "timestamp": (new Date()).toISOString(),
+                        "footer": {
+                            "text": "ID: " + message.author.id
+                        },
+                        "author": {
+                            "name": "\u200b" + message.author.username + "#" + message.author.discriminator
+                        },
+                        "fields": [
+                            {
+                                "name": "Before",
+                                "value": "\u200b" + (oldMessage ? oldMessage.content : "<unavailable>")
+                            },
+                            {
+                                "name": "After",
+                                "value": "\u200b" + (message ? message.content : "<unavailable>")
+                            }
+                        ]
+                    }
+                };
+                if (message.author.staticAvatarURL)
+                    embed["embed"]["author"]["icon_url"] = message.author.staticAvatarURL
+                this.bot.createMessage("275150545243602944", embed);
+            }
         }
     }
 
