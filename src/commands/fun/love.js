@@ -10,7 +10,7 @@ class Love extends Command {
     constructor({t, mod}) {
         super();
         this.cmd = 'love';
-        this.cat = 'misc';
+        this.cat = 'fun';
         this.needGuild = false;
         this.t = t;
         this.u = mod.getMod('um');

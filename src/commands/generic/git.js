@@ -6,7 +6,7 @@ class Git extends Command {
     constructor({t}) {
         super();
         this.cmd = 'git';
-        this.cat = 'misc';
+        this.cat = 'generic';
         this.needGuild = false;
         this.t = t;
         this.accessLevel = 0;

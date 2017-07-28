@@ -10,7 +10,7 @@ class UserInfo extends Command {
     constructor({t, mod}) {
         super();
         this.cmd = 'uinfo';
-        this.cat = 'misc';
+        this.cat = 'generic';
         this.needGuild = true;
         this.t = t;
         this.accessLevel = 0;

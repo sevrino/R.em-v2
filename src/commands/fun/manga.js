@@ -9,7 +9,7 @@ class MangaSearch extends Command {
     constructor({t}) {
         super();
         this.cmd = 'manga';
-        this.cat = 'misc';
+        this.cat = 'fun';
         this.needGuild = false;
         this.t = t;
         this.accessLevel = 0;
