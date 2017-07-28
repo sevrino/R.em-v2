@@ -52,9 +52,10 @@ function jishoEmbed(keyword, result, more) {
     // Add all meanings. A Discord embed field MUST have both a title and a value,
     // that cannot be empty, and most whitespace characters won't do the tric except \u200b
     for (var i = 0; i < result['senses'].length; ++i) {
+        var tags = (result['senses'][i]['tags'] && result['senses'][i]['tags'].length > 0) ? ' (' + result['senses'][i]['tags'].join(', ') + ')' : '';
         embed['embed']['fields'].push({
             'name': (i + 1) + '. ' + result['senses'][i]['english_definitions'].splice(0, 1),
-            'value': '\u200b' + result['senses'][i]['english_definitions'].join('; '),
+            'value': '\u200b' + result['senses'][i]['english_definitions'].join('; ') + tags,
             'inline': true
         });
     }
