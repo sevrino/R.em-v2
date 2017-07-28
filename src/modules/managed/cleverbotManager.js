@@ -27,7 +27,12 @@ class CleverBotManager extends Manager {
         this.cleverbot
             .query(message, {'cs': continuationString})
             .then(response => {
-                msg.channel.createMessage(':pencil: ' + response.output);
+                setTimeout(() => {
+                    msg.channel.sendTyping();
+                    setTimeout(() => {
+                        msg.channel.createMessage(response.output);
+                    }, response.output.length * 65);
+                }, message.length * 25);
                 this.continuationStrings[msg.channel.id] = response.cs;
             })
             .catch(error => {
