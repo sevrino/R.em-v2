@@ -8,6 +8,7 @@ class Ping extends Command {
         this.cmd = 'ping';
         this.cat = 'generic';
         this.needGuild = false;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.help = {

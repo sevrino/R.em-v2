@@ -14,7 +14,7 @@ class Git extends Command {
     }
 
     run(msg) {
-        msg.channel.createMessage('https://github.com/rem-bot-industries/rem-v2');
+        msg.channel.createMessage('https://github.com/Tenchi2xh/rem-v2');
     }
 }
 module.exports = Git;

@@ -18,7 +18,7 @@ class AddPlaylistToQueue extends Command {
     constructor ({t, v, mod}) {
         super();
         this.cmd = 'apq';
-        this.cat = 'playlist';
+        this.cat = 'music';
         this.needGuild = true;
         this.t = t;
         this.v = v;

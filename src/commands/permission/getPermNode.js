@@ -8,6 +8,7 @@ class getPermNode extends Command {
         this.cmd = 'getNode';
         this.cat = 'permission';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
     }

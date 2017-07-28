@@ -12,6 +12,7 @@ class Softban extends Command {
         this.aliases = ['sb', 'softbanne'];
         this.cat = 'moderation';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.help = {

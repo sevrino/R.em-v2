@@ -8,6 +8,7 @@ class SetLanguage extends Command {
         this.cmd = 'setGreeting';
         this.cat = 'moderation';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.sm = mod.getMod('sm');
