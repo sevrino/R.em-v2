@@ -137,7 +137,7 @@ class Shard {
                 this.HUB.send({action: 'updateState', d: {state: 'discord_ready'}});
             }
             // console.log('READY!');
-            this.bot.editStatus('online', {name: 'Long Live Tenchi!'});
+            this.bot.editStatus('online', {name: 'Help: !w.help'});
             this.clientReady();
         });
         this.bot.on('messageCreate', (msg) => {
