@@ -25,6 +25,7 @@ class AddToQueue extends Command {
         this.v = v;
         this.r = mod.getMod('raven');
         this.accessLevel = 0;
+        this.needsArguments = true;
     }
 
     async run(msg) {

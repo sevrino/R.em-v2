@@ -82,7 +82,8 @@ class Jisho extends Command {
             short: 'help.jisho.short',
             usage: 'help.jisho.usage',
             example: 'help.jisho.example'
-        }
+        };
+        this.needsArguments = true;
     }
 
     run(msg) {

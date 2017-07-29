@@ -26,7 +26,8 @@ class QueueMove extends Command {
             short: 'help.qm.short',
             usage: 'help.qm.usage',
             example: 'help.qm.example'
-        }
+        };
+        this.needsArguments = true;
     }
 
     async run(msg) {

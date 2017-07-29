@@ -16,7 +16,8 @@ class Ship extends Command {
             short: 'help.ship.short',
             usage: 'help.ship.usage',
             example: 'help.ship.example'
-        }
+        };
+        this.needsArguments = true;
     }
 
     async run(msg) {

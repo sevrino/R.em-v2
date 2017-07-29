@@ -14,7 +14,8 @@ class Choose extends Command {
             short: 'help.choose.short',
             usage: 'help.choose.usage',
             example: 'help.choose.example'
-        }
+        };
+        this.needsArguments = true;
     }
 
     run(msg) {

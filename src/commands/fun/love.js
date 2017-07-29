@@ -15,6 +15,7 @@ class Love extends Command {
         this.t = t;
         this.u = mod.getMod('um');
         this.accessLevel = 0;
+        this.needsArguments = true;
     }
 
     async run(msg) {

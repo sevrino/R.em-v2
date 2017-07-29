@@ -153,10 +153,13 @@ class Help extends Command {
             name = name[0].toUpperCase() + name.slice(1);
             embed["embed"]["fields"].push({
                 "name": name,
-                "value": category.map(cmd => `\`${cmd.cmd}\``).join(', '),
+                "value": category.map(cmd => "`" + cmd.cmd + (cmd.needsArguments?"・":"") + "`").join(' '),
                 "inline": true
             });
         }
+
+        embed["embed"]["fields"].push({"name":"\u200b", "value": "(Commands with a dot・ need keywords)"});
+
         return embed;
     }
 

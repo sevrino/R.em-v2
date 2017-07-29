@@ -12,6 +12,7 @@ class SayDelete extends Command {
         this.needGuild = true;
         this.t = t;
         this.accessLevel = 0;
+        this.needsArguments = true;
     }
 
     run(msg) {

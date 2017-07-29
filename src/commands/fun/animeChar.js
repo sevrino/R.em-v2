@@ -18,7 +18,8 @@ class AnimeSearch extends Command {
             short: 'help.char.short',
             usage: 'help.char.usage',
             example: 'help.char.example'
-        }
+        };
+        this.needsArguments = true;
     }
 
     async run(msg) {

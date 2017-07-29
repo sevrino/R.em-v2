@@ -16,6 +16,7 @@ class UserInfo extends Command {
         this.accessLevel = 0;
         this.u = mod.getMod('um');
         this.aliases = ['userinfo'];
+        this.needsArguments = true;
     }
 
     async run(msg) {

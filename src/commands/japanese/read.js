@@ -40,7 +40,7 @@ class Read extends Command {
             usage: 'help.read.usage',
             example: 'help.read.example'
         }
-
+        this.needsArguments = true;
     }
 
     run(msg) {
