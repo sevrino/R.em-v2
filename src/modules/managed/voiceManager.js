@@ -268,9 +268,14 @@ class VoiceManager {
         if (msg.channel.guild) {
             let player = this.getPlayer(msg.channel.guild.id);
             if (player) {
+                let queue = player.getQueue();
+                let current = null;
+                if (queue.songs[0]) {
+                    current = queue.songs[0];
+                }
                 await this.writeQueueToCache(msg.channel.guild.id, player.getQueue());
                 player.setQueueSongs([]);
-                player.endSong(true);
+                player.endSong(current, true);
                 clearInterval(player.syncInterval);
             }
             rem.voiceConnections.leave(msg.channel.guild.id);
@@ -393,20 +398,6 @@ class VoiceManager {
 
     async writeQueueToCache(guildId, queue) {
         queue.songs = queue.songs.filter((s) => s !== undefined);
-        queue.songs = queue.songs.map((song) => {
-            if (song) {
-                if (song.type === SongTypes.radio) {
-                    try {
-                        song.end()
-                    } catch (e) {
-
-                    }
-                    return song;
-                } else {
-                    return song;
-                }
-            }
-        });
         await this.redis.setAsync(`queue_${guildId}`, JSON.stringify(queue));
         return this.redis.expireAsync(`queue_${guildId}`, 60 * 60 * 4);
     }

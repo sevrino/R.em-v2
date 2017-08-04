@@ -1,17 +1,13 @@
-/**
- * Created by Julian on 03.04.2017.
- */
-//https://js.is-pretty.sexy/4e17ac.png
 let Command = require('../../structures/command');
 let _ = require("lodash");
 let Radio = require('../../structures/radio');
 let SongTypes = require('../../structures/constants').SONG_TYPES;
 /**
- * The addToQueueCommand
+ * The addShizaToQueueCommand
  * @extends Command
  *
  */
-class AddToQueue extends Command {
+class AddShizaToQueue extends Command {
     /**
      * Create the command
      * @param {Function} t - the translation module
@@ -20,7 +16,7 @@ class AddToQueue extends Command {
      */
     constructor({t, v, mod}) {
         super();
-        this.cmd = 'moe';
+        this.cmd = 'shiza';
         this.cat = 'radio';
         this.needGuild = true;
         this.t = t;
@@ -33,19 +29,18 @@ class AddToQueue extends Command {
         let msgSplit = msg.content.split(' ').splice(1);
         let options = this.checkOptions(msgSplit);
         let radio = new Radio({
-            id: `listen_moe_${Date.now()}`,
+            id: `shiza_fm_${Date.now()}`,
             type: SongTypes.radio,
-            title: 'Listen.moe',
-            url: 'https://listen.moe',
+            title: 'shizafm.com',
+            url: 'http://shizafm.com',
             needsResolve: false,
             local: false,
             duration: 'live',
-            streamUrl: 'http://listen.moe/stream',
+            streamUrl: 'http://live.shizafm.com:8000/live',
             live: true,
             needsYtdl: false,
             isOpus: false,
-            wsUrl: 'wss://listen.moe/api/v2/socket',
-            radio: 'listen.moe'
+            radio: 'shizafm.com'
         });
         try {
             let res = await this.v.addRadioToQueue(msg, radio, options.instant, options.next);
@@ -84,4 +79,4 @@ class AddToQueue extends Command {
         return {next, instant};
     }
 }
-module.exports = AddToQueue;
+module.exports = AddShizaToQueue;

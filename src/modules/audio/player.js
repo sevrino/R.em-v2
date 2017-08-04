@@ -233,10 +233,11 @@ class Player extends EventEmitter {
      * @param Song - the song that is skipped (optional)
      */
     async nextSong(Song) {
+        let previous = null;
         if (this.queue.songs.length > 0) {
             if (typeof (Song) !== 'undefined') {
                 if (this.queue.songs[0] && Song.qid === this.queue.songs[0].qid) {
-                    this.queue.songs.shift();
+                    previous = this.queue.songs.shift();
                     if (this.queue.repeat === 'single') {
                         Song.qid = shortid.generate();
                         this.queue.songs.unshift(Song);
@@ -250,23 +251,23 @@ class Player extends EventEmitter {
                             try {
                                 this.queue.songs[0] = await ytr.resolve(song.url);
                                 this.queue.songs[0].queuedBy = song.queuedBy;
-                                await this.endSong();
+                                await this.endSong(previous);
                                 this.play(this.queue.songs[0]);
                             } catch (e) {
                                 winston.error(e);
                                 this.nextSong(song);
                             }
                         } else {
-                            await this.endSong();
+                            await this.endSong(previous);
                             this.play(this.queue.songs[0]);
                         }
                     } else {
-                        this.endSong();
+                        this.endSong(previous);
                     }
                 }
             } else if (this.queue.songs[0]) {
                 let song = this.queue.songs[0];
-                this.queue.songs.shift();
+                previous = this.queue.songs.shift();
                 if (this.queue.repeat === 'single') {
                     song.qid = shortid.generate();
                     this.queue.songs.unshift(song);
@@ -281,7 +282,7 @@ class Player extends EventEmitter {
                             let queuedBy = this.queue.songs[0].queuedBy ? this.queue.songs[0].queuedBy : '-';
                             this.queue.songs[0] = await ytr.resolve(newSong.url);
                             this.queue.songs[0].queuedBy = queuedBy;
-                            await this.endSong();
+                            await this.endSong(previous);
                             this.play(this.queue.songs[0]);
                             return song;
                         } catch (e) {
@@ -289,23 +290,30 @@ class Player extends EventEmitter {
                             this.nextSong(newSong);
                         }
                     } else {
-                        await this.endSong();
+                        await this.endSong(previous);
                         this.play(this.queue.songs[0]);
                         return song;
                     }
                 } else {
-                    this.endSong();
+                    this.endSong(previous);
                     return song;
                 }
             } else {
-                this.endSong();
+                this.endSong(previous);
             }
         } else {
-            this.endSong();
+            this.endSong(previous);
         }
     }
 
-    async endSong(leave) {
+    async endSong(song, leave) {
+        if (song && song.type === SongTypes.radio) {
+            try {
+                song.end();
+            } catch (e) {
+                console.error(e);
+            }
+        }
         try {
             await this.connection.stopPlaying();
         } catch (e) {

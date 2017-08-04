@@ -3,12 +3,25 @@
  */
 let Song = require('./song.js');
 let websocket = require('ws');
+let icy = require('icy');
+let devnull = require('dev-null');
+
 class Radio extends Song {
     constructor (options) {
         super(options);
         this.options = options;
         this.ws = null;
+        this.icyRequest = null;
         this.ended = false;
+        this.toJSON = function () {
+            var result = {};
+            for (var x in this) {
+                if (x !== "icyRequest" && x !== 'ws') {
+                    result[x] = this[x];
+                }
+            }
+            return result;
+        };
     }
 
     updateTitle (title) {
@@ -17,15 +30,38 @@ class Radio extends Song {
 
     connect () {
         this.ended = false;
-        this.ws = new websocket(this.options.wsUrl);
-        this.ws.on('open', () => {
-            this.connectionAttempts = 1;
-        });
-        this.ws.on('message', (msg, flags) => {
-            this.onMessage(msg, flags)
-        });
-        this.ws.on('error', (err) => this.onError(err));
-        this.ws.on('close', (code, number) => this.onDisconnect(code, number));
+        if (this.options.wsUrl) {
+            console.error('ws-ing');
+            this.ws = new websocket(this.options.wsUrl);
+            this.ws.on('open', () => {
+                this.connectionAttempts = 1;
+            });
+            this.ws.on('message', (msg, flags) => {
+                this.onMessage(msg, flags)
+            });
+            this.ws.on('error', (err) => this.onError(err));
+            this.ws.on('close', (code, number) => this.onDisconnect(code, number));
+        } else {
+            console.error('icy-ing');
+            var radio = this;
+
+            // connect to the remote stream
+            this.icyRequest = icy.get(this.options.streamUrl, function (res) {
+                // log the HTTP response headers
+                //console.error(res.headers);
+
+                // log any "metadata" events that happen
+                res.on('metadata', function (metadata) {
+                    var parsed = icy.parse(metadata);
+                    if (parsed.StreamTitle) {
+                        console.error(parsed);
+                        radio.updateTitle(`${parsed.StreamTitle} (${radio.options.radio})`);
+                    }
+                });
+
+                res.pipe(devnull());
+            });
+        }
     }
 
 
@@ -38,11 +74,22 @@ class Radio extends Song {
     end () {
         this.ended = true;
         try {
-            this.ws.close(4000, 'not needed anymore');
+            if (this.ws) {
+                console.error(`trying to stop ws ${this.options.streamUrl}`);
+                this.ws.close(4000, 'not needed anymore');
+                console.error(`stopped ws ${this.options.streamUrl}`);
+            } else {
+                if (this.icyRequest) {
+                    console.error(`trying to stop ${this.options.streamUrl}`);
+                    this.icyRequest.abort();
+                    console.error(`stopped ${this.options.streamUrl}`);
+                }
+            }
         } catch (e) {
 
         }
         this.ws = null;
+        this.icyRequest = null;
     }
 
     onDisconnect (code, number) {

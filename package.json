@@ -31,6 +31,7 @@
     "better-cleverbot-io": "^1.0.2",
     "blocked": "^1.2.1",
     "bluebird": "^3.5.0",
+    "dev-null": "^0.1.1",
     "docker-config-loader": "^1.0.0",
     "eris": "git+https://github.com/abalabahaha/eris.git#dev",
     "erlpack": "github:hammerandchisel/erlpack",
