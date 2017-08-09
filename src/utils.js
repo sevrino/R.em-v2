@@ -36,6 +36,8 @@ module.exports = class utils {
             return reading;
         if (kanji == 'だ' && reading == "で")
             return "だ";
+        if(reading == "かおもじ" && kanji !== "顔文字")
+            return kanji;
         var furigana = '';
         var placeLeft = 0
         var placeRight = 0
@@ -83,12 +85,15 @@ module.exports = class utils {
 
     static mecab(input, callback) {
         let decoder = new StringDecoder('utf8');
-        var c = cp.spawn('mecab', []);
+        var c = cp.spawn('mecab', ['-d', '/usr/lib/mecab/dic/mecab-ipadic-neologd']);
 
         c.stdin.write(input + '\n');
         c.stdout.on('data', data => {
             callback(decoder.write(data));
         });
+        c.stderr.on('data', data => {
+            console.log(data)
+        })
         c.stdin.end();
     }
 
