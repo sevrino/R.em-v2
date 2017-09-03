@@ -9,6 +9,7 @@ class Challenge extends Command {
         this.needGuild = false;
         this.accessLevel = 2;
         this.hidden = true;
+        this.timeout = null;
         this.t = t;
         this.help = {
             short: 'help.challenge.short',
@@ -53,7 +54,7 @@ class Challenge extends Command {
         return ret;
     }
 
-    async endChallenge(con, channel, author, duration) {
+    async endChallenge(con, channel, author, duration, thisRef) {
         let answers = {};
         let collector = con.addCollector(channel.id);
         let timerMessage = await channel.createMessage('Challenge started');
@@ -71,8 +72,10 @@ class Challenge extends Command {
                     channel.createMessage(`<@!${user}>: ${answers[user]}`);
             }
             clearTimeout(interval);
+            if (thisRef.timeout)
+                clearTimeout(thisRef.timeout);
         };
-        setTimeout(doStop, duration * 1000);
+        thisRef.timeout = setTimeout(doStop, duration * 1000);
         updateMessage();
         collector.on('message', async (msg) => {
             if (msg.author.id === author) {
@@ -118,12 +121,12 @@ class Challenge extends Command {
         let topic = await this.askFor(msg, "What's the topic of this challenge?");
         let text = await this.askFor(msg, "What's the text to translate?");
         let duration = await this.askFor(msg, "How long should the challenge last? (seconds)");
-        var channel = await msg.channel.guild.createChannel('challenge', 0, 'Translation Challenge ' + (new Date()));
-        channel.editPermission(msg.channel.guild.roles.find(x => x.name == '@everyone').id, 1024 | 2048 | 65536, 0, "role", "Change permissions for the challenge.");
+        var channel = await msg.channel.guild.channels.find(c => c.name == "challenge");
+        //channel.editPermission(msg.channel.guild.roles.find(x => x.name == '@everyone').id, 1024 | 2048 | 65536, 0, "role", "Change permissions for the challenge.");
         let shadowCss = utils.generateShadow(3.2, 50);
         utils.generateImageFromText(text, async (embed) => {
-            await channel.createMessage(`<@&341001978236764172> ~~ ${topic}\n Can you solve it? (^o^)丿`, embed);
-            this.endChallenge(msg.CON, channel, msg.author.id, duration);
+            await channel.createMessage(`<@&353425937196515330> ~~ ${topic}\n Can you solve it? (^o^)丿`, embed);
+            this.endChallenge(msg.CON, channel, msg.author.id, duration, this);
             msg.delete();
         }, `
 body {
