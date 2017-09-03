@@ -85,7 +85,7 @@ module.exports = class utils {
 
     static mecab(input, callback) {
         let decoder = new StringDecoder('utf8');
-        var c = cp.spawn('mecab', ['-d', '/usr/lib/mecab/dic/mecab-ipadic-neologd']);
+        var c = cp.spawn('mecab', []); // ['-d', '/usr/lib/mecab/dic/mecab-ipadic-neologd']
 
         c.stdin.write(input + '\n');
         c.stdout.on('data', data => {

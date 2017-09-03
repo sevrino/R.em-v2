@@ -4,12 +4,8 @@ USER root
 
 RUN echo "deb http://ftp.uk.debian.org/debian jessie-backports main" >> /etc/apt/sources.list && \
     apt-get update -y && \
-    apt-get install -y mecab libmecab-dev mecab-ipadic-utf8 && \
-    apt-get install -y git make curl xz-utils file mongodb ffmpeg wget redis-server build-essential fontconfig && \
-    cd /tmp && \
-    git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git && \
-    cd mecab-ipadic-neologd && \
-    ./bin/install-mecab-ipadic-neologd -n && \
+    apt-get install -y mecab-ipadic-utf8 && \
+    apt-get install -y git mongodb ffmpeg mecab wget redis-server build-essential fontconfig && \
     mkdir ~/.ssh && \
     ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts && \
     wget -qO- https://deb.nodesource.com/setup_8.x | bash - && \
