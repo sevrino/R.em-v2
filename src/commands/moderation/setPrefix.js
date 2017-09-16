@@ -8,6 +8,7 @@ class SetPrefix extends Command {
         this.cmd = 'setPrefix';
         this.cat = 'moderation';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.g = mod.getMod('gm');

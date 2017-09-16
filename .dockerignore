@@ -8,4 +8,5 @@ cmd.bat
 LICENSE
 README.md
 .jsdoc.json
-config/
+Dockerfile
+kanji_orig/

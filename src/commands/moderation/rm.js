@@ -11,6 +11,7 @@ class RemoveMessages extends Command {
         this.cmd = 'rm';
         this.cat = 'moderation';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.msg = null;

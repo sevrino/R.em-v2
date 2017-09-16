@@ -10,3 +10,9 @@ cmd.bat
 .env
 /dist
 .env-safe
+build.sh
+deploy.sh
+logs.sh
+/kanji
+/kanji_orig
+.DS_Store

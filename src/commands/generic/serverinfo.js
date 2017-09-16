@@ -8,7 +8,7 @@ class ServerInfo extends Command {
     constructor({t, mod}) {
         super();
         this.cmd = 'sinfo';
-        this.cat = 'misc';
+        this.cat = 'generic';
         this.needGuild = true;
         this.t = t;
         this.accessLevel = 0;

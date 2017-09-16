@@ -6,7 +6,7 @@ class Dere extends Command {
     constructor({t}) {
         super();
         this.cmd = 'dere';
-        this.cat = 'misc';
+        this.cat = 'fun';
         this.needGuild = false;
         this.t = t;
         this.accessLevel = 0;

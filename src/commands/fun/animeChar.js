@@ -9,7 +9,7 @@ class AnimeSearch extends Command {
     constructor({t}) {
         super();
         this.cmd = 'char';
-        this.cat = 'misc';
+        this.cat = 'fun';
         this.aliases = ['character', 'animechar'];
         this.needGuild = false;
         this.t = t;
@@ -18,7 +18,8 @@ class AnimeSearch extends Command {
             short: 'help.char.short',
             usage: 'help.char.usage',
             example: 'help.char.example'
-        }
+        };
+        this.needsArguments = true;
     }
 
     async run(msg) {

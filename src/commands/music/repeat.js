@@ -22,6 +22,7 @@ class Repeat extends Command {
         this.t = t;
         this.v = v;
         this.accessLevel = 0;
+        this.needsArguments = true;
     }
 
     run(msg) {

@@ -10,17 +10,25 @@ class Love extends Command {
     constructor({t, mod}) {
         super();
         this.cmd = 'love';
-        this.cat = 'misc';
+        this.cat = 'fun';
         this.needGuild = false;
         this.t = t;
         this.u = mod.getMod('um');
         this.accessLevel = 0;
+        this.needsArguments = true;
     }
 
     async run(msg) {
         let time = moment();
         time.locale(msg.lang[0]);
         let msgSplit = msg.content.trim().split(' ').map(c => c.trim()).filter(c => c !== '').splice(1);
+        if (msgSplit.length == 0) {
+            msg.channel.createMessage("You have a total of **" + msg.dbUser.rep + "** love points! :two_hearts:");
+            let lowest = Math.min(...msg.dbUser.reps);
+            msg.channel.createMessage(this.t('love.next', {lngs: msg.lang, time: time.to(lowest)}));
+            return;
+        }
+
         if (this.u.checkLoveCD(msg.dbUser)) {
             let targetMember;
             if (msg.mentions.length > 0) {
@@ -42,7 +50,8 @@ class Love extends Command {
                     targetMember = users[pick];
                 }
             } else {
-                return msg.channel.createMessage(this.t('generic.mention', {lngs: msg.lang}));
+                //return msg.channel.createMessage(this.t('generic.mention', {lngs: msg.lang}));
+                return;
             }
             let inc = this.checkMsg(msgSplit) ? 1 : -1;
             let target = targetMember;

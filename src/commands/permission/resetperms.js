@@ -8,6 +8,7 @@ class ResetPermissions extends Command {
         this.cmd = 'resetPerms';
         this.cat = 'permission';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.p = mod.getMod('pm');

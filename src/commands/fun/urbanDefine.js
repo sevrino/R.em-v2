@@ -9,10 +9,11 @@ class UrbanDictionary extends Command {
     constructor({t}) {
         super();
         this.cmd = 'define';
-        this.cat = 'misc';
+        this.cat = 'fun';
         this.needGuild = false;
         this.t = t;
         this.accessLevel = 0;
+        this.needsArguments = true;
     }
 
     async run(msg) {

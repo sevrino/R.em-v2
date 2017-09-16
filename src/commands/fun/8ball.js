@@ -14,7 +14,9 @@ class EightBall extends Command {
             short: 'help.8ball.short',
             usage: 'help.8ball.usage',
             example: 'help.8ball.example'
-        }
+        };
+        this.needsArguments = true;
+
     }
 
     run(msg) {

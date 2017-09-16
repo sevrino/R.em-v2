@@ -12,6 +12,7 @@ class Ban extends Command {
         this.aliases = ['b', 'banne'];
         this.cat = 'moderation';
         this.needGuild = true;
+        this.hidden = true;
         this.t = t;
         this.accessLevel = 0;
         this.help = {

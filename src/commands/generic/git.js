@@ -6,7 +6,7 @@ class Git extends Command {
     constructor({t}) {
         super();
         this.cmd = 'git';
-        this.cat = 'misc';
+        this.cat = 'generic';
         this.needGuild = false;
         this.t = t;
         this.accessLevel = 0;
@@ -14,7 +14,7 @@ class Git extends Command {
     }
 
     run(msg) {
-        msg.channel.createMessage('https://github.com/rem-bot-industries/rem-v2');
+        msg.channel.createMessage('https://github.com/Tenchi2xh/rem-v2');
     }
 }
 module.exports = Git;

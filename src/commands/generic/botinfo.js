@@ -11,7 +11,7 @@ class BotInfo extends Command {
     constructor({t, mod}) {
         super();
         this.cmd = 'bot';
-        this.cat = 'misc';
+        this.cat = 'generic';
         this.aliases = ['info', 'stats'];
         this.needGuild = false;
         this.t = t;

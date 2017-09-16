@@ -19,6 +19,42 @@
 
 I will write those if people actually want to contribute. Until then: Just make it work good and fast. uwu
 
+## Modifications compared to original Rem
+
+- Fully containerized
+- Fully re-implemented Cleverot module, now supporting current API
+- Removed all NSFW commands
+- Moderation features:
+    - Logs all edited messages to some hardcoded channel ID
+- Japanese commands:
+    - `!w.kanji <kanji>` sends an embed with meanings, readings, misc infos, and uploads an animation of how to write the character
+    - `!w.jisho [definition number] <keywords>` queries Jisho.org to send an embed with all relevant dictionary information
+    - `!w.read <japanese sentence>` uses Mecab to generate a kana-only version of provided sentence
+- Easter eggs commands:
+    - `!w.master` to show who's really boss
+    - `!w.react <letters>` makes Rem react to this message with letter emojis (hits rate-limitting fast)
+
+## Building requirements:
+
+### Configuration files
+
+Place `main.json` and `keys.json` (format [below](#configuration-format)) in a folder called `config/`
+
+### Resources
+
+- Translations:
+    - Run `git submodule init` and `git submodule update`
+- Kanji stroke order animations:
+    - Download [KanjiVG main SVGs](https://github.com/KanjiVG/kanjivg/releases)
+    - Generate animation gifs with [Kanimaji](https://github.com/maurimo/kanimaji)
+    - Use the default settings, but with a white background and only produce gifs
+    - Use `scripts/kanimaji_batch.py` to generate animations for all SVGs (takes about 20 hours on a MBP 2016)
+    - Archive all generated GIFs in a compressed tarall named `kanji.tar.gz` located in `kanji/`
+- Kanji information:
+    - Download the [JSON version of KANJIDIC2](https://github.com/shawnps/kanjidic2-json)
+    - Use `scripts/convert_kanjidic2.py` to convert it to a more convenient format
+    - Place output in `kanji/kanji.json`
+
 ## Requirements:
 * Node and NPM
 * Git
@@ -67,14 +103,13 @@ If the installation fails, due to not being able to clone the git repo of it, re
   "anilist_id": "not used atm",
   "lbsearch_sfw_key": "ibsear.ch key",
   "lbsearch_nsfw_key": "ibsearch.xxx key",
-  "cleverbot_api_user": "cleverbot.io api user",
-  "cleverbot_api_key": "cleverbot.io api key",
+  "cleverbot_api_key": "cleverbot.com api key",
   "mashape_key": "mashape key",
   "use_ws": false,
   "master_hostname": "not needed.",
   "mongo_hostname": "The full database adress: e.g. mongodb://host:port/dbname",
-  "redis_hostname": "the redis ip, port is automatically set to 6379",
   "redis_enabled": true,
+  "redis_hostname": "the redis ip, port is automatically set to 6379",
   "redis_database": 2,
   "shard_token": "not needed."
 }

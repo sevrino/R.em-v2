@@ -10,12 +10,13 @@ class UserInfo extends Command {
     constructor({t, mod}) {
         super();
         this.cmd = 'uinfo';
-        this.cat = 'misc';
+        this.cat = 'generic';
         this.needGuild = true;
         this.t = t;
         this.accessLevel = 0;
         this.u = mod.getMod('um');
         this.aliases = ['userinfo'];
+        this.needsArguments = true;
     }
 
     async run(msg) {
