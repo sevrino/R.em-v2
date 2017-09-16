@@ -21,7 +21,7 @@ class AddToQueue extends Command {
     constructor({t, v, mod}) {
         super();
         this.cmd = 'moe';
-        this.cat = 'music';
+        this.cat = 'radio';
         this.needGuild = true;
         this.t = t;
         this.v = v;

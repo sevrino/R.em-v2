@@ -65,51 +65,34 @@ class Help extends Command {
      */
     buildCommandHelp(msg, command) {
         let helpMessage = "";
-
+        helpMessage += this.t('help.command-help-title', {
+                lngs: msg.lang,
+                command: command.cmd,
+                prefix: msg.prefix
+            }) + '\n';
         if (command.aliases.length > 0) {
             let aliases = command.aliases.map(a => `\`${a}\``);
-            helpMessage += 'Aliases: ' + aliases.join(' ') + '\n\n';
+            helpMessage += this.t('help.command-aliases', {lngs: msg.lang, aliases: aliases.join(', ')}) + '\n';
         }
         if (command.help.short) {
-            helpMessage += this.t(command.help.short, {lngs: msg.lang}) + '\n\n';
+            helpMessage += this.t('help.command-shorthelp', {lngs: msg.lang}) + ' ' + `\`${this.t(command.help.short, {lngs: msg.lang})}\`` + '\n';
         }
         if (command.help.long) {
-            helpMessage += this.t(command.help.long, {lngs: msg.lang}) + '\n';
+            helpMessage += this.t('help.command-longhelp', {lngs: msg.lang}) + '\n' + `\`\`\`${this.t(command.help.long, {lngs: msg.lang})}\`\`\`` + '\n';
         }
-
-        var embed = {
-            "embed": {
-                "title": "`" + msg.prefix + command.cmd + "`",
-                "description": helpMessage,
-                "color": 7054335,
-                "footer": {
-                    "icon_url": "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
-                    "text": "github.com/Tenchi2xh/rem-v2"
-                },
-                "thumbnail": {
-                    "url": "https://user-images.githubusercontent.com/4116708/28647479-b0eb104a-7267-11e7-9778-63becbbaa56b.png"
-                },
-                "fields": [
-                    
-                ]
-            }
-        };
-
-
         if (command.help.usage) {
-            embed["embed"]["fields"].push({
-                "name": "Usage",
-                "value": "`" + this.t(command.help.usage, {lngs: msg.lang, prefix: msg.prefix}) + "`"
-            });
+            helpMessage += this.t('help.command-usage', {lngs: msg.lang}) + ' ' + `\`${this.t(command.help.usage, {
+                    lngs: msg.lang,
+                    prefix: msg.prefix
+                })}\`` + '\n';
         }
         if (command.help.example) {
-            embed["embed"]["fields"].push({
-                "name": "Examples",
-                "value": this.t(command.help.example, {lngs: msg.lang, prefix: msg.prefix}).replace(/\n/g, '\n\n')
-            });
+            helpMessage += this.t('help.command-example', {lngs: msg.lang}) + '\n' + `${this.t(command.help.example, {
+                    lngs: msg.lang,
+                    prefix: msg.prefix
+                })}` + '\n';
         }
-
-        return embed;
+        return helpMessage;
     }
 
     /**
@@ -118,66 +101,65 @@ class Help extends Command {
      * @param {Object} commands Map of commands with data like category, trigger and so on
      */
     buildCategoryHelp(msg, commands) {
-        var helpMessage = `**Welcome!** I am ${rem.user.username}, a social bot here on ${msg.channel.guild.name}!\n`;
-        helpMessage    += "\n";
-
-        var moreHelp = "To use a command, type `" + msg.prefix + "[command name]`\n\n";
-        moreHelp    += "Some commands require *keywords* after the name,\nfor example: `" + msg.prefix + "jisho house`\n\n"
-        moreHelp    += "To learn more about a specific command,\ntype: `" + msg.prefix + "help [command name]`\n\n";
-        moreHelp    += "Supported commands are:\n\u200b"
-
         let categories = {};
-
+        let helpMessage = "";
+        helpMessage += this.t('help.introduction', {
+                lngs: msg.lang,
+                name: rem.user.username,
+                prefix: msg.prefix
+            }) + '\n';
+        helpMessage += this.t('help.categories.list', {lngs: msg.lang}) + '\n';
         for (let key in commands) {
-            if (commands.hasOwnProperty(key) && !commands[key].hidden) {
+            if (commands.hasOwnProperty(key)) {
                 let command = commands[key];
-                if (!categories[command.cat])
-                    categories[command.cat] = [];
-                categories[command.cat].push(command);
+                if (!command.hidden) {
+                    if (!categories[command.cat]) {
+                        categories[command.cat] = [command];
+                    } else {
+                        categories[command.cat].push(command);
+                    }
+                }
             }
         }
-
+        let sortedCategories = [];
         for (let key in categories) {
             if (categories.hasOwnProperty(key)) {
-                categories[key].sort((a, b) => a.cmd > b.cmd)
+                let category = categories[key];
+                sortedCategories.push(key);
+                categories[key].sort((a, b) => {
+                    if (a.cmd > b.cmd) {
+                        return 1;
+                    }
+                    if (a.cmd < b.cmd) {
+                        return -1;
+                    }
+                    return 0;
+                })
             }
         }
-
-        let sortedCategories = Object.keys(categories);
-        sortedCategories.sort((a, b) => this.getCategoryRanking(a) > this.getCategoryRanking(b));
-
-        var embed = {
-            "content": helpMessage,
-            "embed": {
-                "title": "Help about commands",
-                "description": moreHelp,
-                "color": 7054335,
-                "footer": {
-                    "icon_url": "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
-                    "text": "github.com/Tenchi2xh/rem-v2"
-                },
-                "thumbnail": {
-                    "url": "https://user-images.githubusercontent.com/4116708/28647479-b0eb104a-7267-11e7-9778-63becbbaa56b.png"
-                },
-                "fields": []
+        sortedCategories.sort((a, b) => {
+            let aCatValue = this.getCategoryRanking(a);
+            let bCatValue = this.getCategoryRanking(b);
+            if (aCatValue > bCatValue) {
+                return 1;
             }
-        }
-
+            if (aCatValue < bCatValue) {
+                return -1;
+            }
+            return 0;
+        });
         for (let i = 0; i < sortedCategories.length; i++) {
             let category = categories[sortedCategories[i]];
-            var name = this.t(`help.categories.${sortedCategories[i]}`, {lngs: msg.lang});
-            name = name.slice(1, -1).toLowerCase();
-            name = name[0].toUpperCase() + name.slice(1);
-            embed["embed"]["fields"].push({
-                "name": name,
-                "value": category.map(cmd => "`" + cmd.cmd + (cmd.needsArguments?"・":"") + "`").join(' '),
-                "inline": true
-            });
+            helpMessage += '**' + this.t(`help.categories.${sortedCategories[i]}`, {lngs: msg.lang}) + '**' + ': ';
+            for (let x = 0; x < category.length; x++) {
+                helpMessage += `\`${category[x].cmd}\``;
+                if (category.length - 1 !== x) {
+                    helpMessage += ', ';
+                }
+            }
+            helpMessage += '\n\n'
         }
-
-        embed["embed"]["fields"].push({"name":"\u200b", "value": "(Commands with a dot・ need keywords)"});
-
-        return embed;
+        return helpMessage;
     }
 
     /**
@@ -185,9 +167,41 @@ class Help extends Command {
      * @param {String} category Name of the category to be evaluated
      * @return {Number}
      */
-    getCategoryRanking(category, def=0) {
-        let rank = categoriesOrder.indexOf(category);
-        return rank > -1 ? rank : def;
+    getCategoryRanking(category) {
+        let ranking = 0;
+        switch (category) {
+            case 'generic':
+                ranking = 0;
+                break;
+            case 'fun':
+                ranking = 1;
+                break;
+            case 'image':
+                ranking = 2;
+                break;
+            case 'music':
+                ranking = 3;
+                break;
+            case 'radio':
+                ranking = 4;
+                break;
+            case 'playlist':
+                ranking = 5;
+                break;
+            case 'moderation':
+                ranking = 6;
+                break;
+            case 'permission':
+                ranking = 7;
+                break;
+            case 'misc':
+                ranking = 8;
+                break;
+            case 'nsfw':
+                ranking = 9;
+                break;
+        }
+        return ranking;
     }
 }
 module.exports = Help;
