@@ -40,7 +40,7 @@ class AddToQueue extends Command {
             needsResolve: false,
             local: false,
             duration: 'live',
-            streamUrl: 'http://listen.moe/stream',
+            streamUrl: 'https://listen.moe/stream',
             live: true,
             needsYtdl: false,
             isOpus: false,
