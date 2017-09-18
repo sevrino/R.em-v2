@@ -22,18 +22,17 @@ class BotInfo extends Command {
 
     run(msg) {
         let user = rem.user;
-        // let responseTimeout = setTimeout(() => {
-        //
-        // }, 10000);
-        this.fetchData(msg).then(data => {
-            // console.log(data);
-            this.buildReply(msg, user, data);
-        }).catch(data => {
-            console.error(data);
-            // console.error(data.badShards);
-            let res = data.err === `Timeout!` ? `Timeout! Only ${Object.keys(data.shardData).length} Shards have responded! Missing Shards: ${Object.keys(data.badShards).join(', ')}` : 'kyaa >_<';
-            msg.channel.createMessage(`:x: \`${res}\``);
-        });
+        if (this.hub) {
+            this.fetchData(msg).then(data => {
+                this.buildReply(msg, user, data);
+            }).catch(data => {
+                console.error(data);
+                let res = data.err === `Timeout!` ? `Timeout! Only ${Object.keys(data.shardData).length} Shards have responded! Missing Shards: ${Object.keys(data.badShards).join(', ')}` : 'kyaa >_<';
+                msg.channel.createMessage(`:x: \`${res}\``);
+            });
+        } else {
+            this.buildReply(msg, user, null);
+        }
     }
 
     fetchData(msg) {
@@ -76,13 +75,15 @@ class BotInfo extends Command {
         let shard_channels = rem.guilds.map(g => g.channels.size).reduce((a, b) => a + b);
         let shard_voice = this.v.getVoiceConnections();
         let shard_voice_playing = this.v.getVoiceConnections(true);
-        _.forIn(data.shards, (value, key) => {
-            guilds += value.guilds;
-            users += value.users;
-            channels += value.channels;
-            voice += value.voice;
-            voice_playing += value.voice_active;
-        });
+        if (data) {
+            _.forIn(data.shards, (value, key) => {
+                guilds += value.guilds;
+                users += value.users;
+                channels += value.channels;
+                voice += value.voice;
+                voice_playing += value.voice_active;
+            });
+        }
         fields.push({
             name: this.t('bot-info.uptime', {lngs: msg.lang}),
             value: moment().to(rem.startTime),

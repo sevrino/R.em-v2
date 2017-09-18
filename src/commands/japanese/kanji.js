@@ -79,7 +79,7 @@ class Kanji extends Command {
             return;
         }
 
-        let message = (dictionary[kanji]) ? kanjiEmbed(dictionary[kanji]) : "";
+        let message = (kanji in dictionary) ? kanjiEmbed(dictionary[kanji]) : "";
 
         pnfs.readFile("../kanji/" + kanjiFile)
             .then(buffer => msg.channel.createMessage(message , {

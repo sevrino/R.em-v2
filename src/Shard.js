@@ -24,8 +24,12 @@ mongoose.connect(url, {useMongoClient: true}, (err) => {
 let redis = require("redis");
 const stat = `rem_${remConfig.environment}`;
 const blocked = require('blocked');
-const procToWs = require('./ws/procToWs');
-const hub = new procToWs();
+if (remConfig.use_ws) {
+    const procToWs = require('./ws/procToWs');
+    const hub = new procToWs();
+} else {
+    const hub = undefined;
+}
 // let memwatch = require('memwatch-next');
 // memwatch.on('leak', function(info) {
 //     console.log("leak:",info);
@@ -53,7 +57,7 @@ class Shard {
         this.CON = new Connector();
         this.MSG = null;
         this.HUB = hub;
-        this.SHARDED = typeof (hub) !== 'undefined';
+        this.SHARDED = hub !== null;
         this.MOD = new ModuleManager();
         this.interval = null;
         this.Raven = Raven;

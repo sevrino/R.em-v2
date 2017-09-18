@@ -101,10 +101,6 @@ class MessageManager extends Manager {
                             msg.aliases = this.aliases;
                             let node = `${command.cat}.${command.cmd}`;
 
-                            if (msg.channel.id === "203238995117867008" && msg.author.id !== remConfig.owner_id) {
-                                if (command.cat != "japanese")
-                                    return;
-                            }
                             try {
                                 await this.p.checkPermission(msg, node);
                             } catch (e) {
@@ -116,11 +112,13 @@ class MessageManager extends Manager {
                                 }));
                             }
 
-                            let roles = msg.channel.guild.members.find(m => m.id === msg.author.id).roles;
-                            let blacklistRole = msg.channel.guild.roles.find(r => r.name === 'Rem Blacklist');
-                            if (blacklistRole !== null && typeof blacklistRole !== 'undefined') {
-                                if (roles.indexOf(blacklistRole.id) !== -1)
-                                    return msg.channel.createMessage(`じいいいいいいぃぃ`)
+                            if (msg.channel.guild) {
+                                let roles = msg.channel.guild.members.find(m => m.id === msg.author.id).roles;
+                                let blacklistRole = msg.channel.guild.roles.find(r => r.name === 'Rem Blacklist');
+                                if (blacklistRole !== null && typeof blacklistRole !== 'undefined') {
+                                    if (roles.indexOf(blacklistRole.id) !== -1)
+                                        return msg.channel.createMessage(`じいいいいいいぃぃ`)
+                                }
                             }
 
                             console.log(cmd);

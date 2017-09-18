@@ -19,13 +19,16 @@ class GuildFinder extends Command {
 
     run(msg) {
         let time = Date.now();
-        this.fetchData(msg).then(data => {
-            // console.log(data);
-            this.buildReply(msg, data, time);
-        }).catch(err => {
-            console.error(err);
-            msg.channel.createMessage(`:x: \`${err}\``);
-        });
+        if (this.hub) {
+            this.fetchData(msg).then(data => {
+                this.buildReply(msg, data, time);
+            }).catch(err => {
+                console.error(err);
+                msg.channel.createMessage(`:x: \`${err}\``);
+            });
+        } else {
+            msg.channel.createMessage(`:x: No shards here!`);
+        }
     }
 
     fetchData(msg) {

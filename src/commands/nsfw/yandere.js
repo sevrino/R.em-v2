@@ -4,6 +4,7 @@
 let Command = require('../../structures/command');
 let winston = require('winston');
 let request = require('request');
+let GuildChannel = require('eris').GuildChannel;
 
 // Terms to block from search (not added as hidden tags on the search because
 // yandere limits searches to 6 tags, so we remove tags from the query before we
@@ -26,7 +27,7 @@ class Yandere extends Command {
 
     run(msg) {
         // Force commands to only run in NSFW channels
-        if (!msg.channel.name.startsWith('nsfw')) {
+        if (!msg.channel.name.startsWith('nsfw') && (!(msg.channel instanceof GuildChannel) || !msg.channel.nsfw)) {
             return msg.channel.createMessage(this.t('nsfw-images.error-discord-not-nsfw-channel', {lngs: msg.lang}));
         }
 
