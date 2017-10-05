@@ -25,7 +25,7 @@ class CleverBotManager extends Manager {
         }
 
         this.cleverbot
-            .query(message, {'cs': continuationString})
+            .query(encodeURI(message), {'cs': continuationString})
             .then(response => {
                 setTimeout(() => {
                     msg.channel.sendTyping();
