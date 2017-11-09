@@ -64,7 +64,7 @@ function jishoEmbed(keyword, result, more) {
         var plural = (more == 2) ? '' : 's';
         embed['embed']['fields'].push({
             'name': '\u200b',
-            'value': '(' + (more - 1) + ' other result' + plural + ': use `!w.jisho [number] query`)'
+            'value': '(' + (more - 1) + ' other result' + plural + ': use `$jisho [number] query`)'
         });
     }
 

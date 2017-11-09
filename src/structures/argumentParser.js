@@ -10,5 +10,5 @@ const parse = (messageSplit, options = {}) => {
     return minimist(messageSplit, options);
 };
 //args = {a:{type:string}, b:{type:discordUser}}
-//!w.ap permission.* true
+//$ap permission.* true
 module.exports = {parse};

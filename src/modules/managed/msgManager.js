@@ -195,13 +195,13 @@ class MessageManager extends Manager {
                 winston.debug(`Guild:${msg.channel.guild.id}|${msg.channel.guild.name} setting lang to en`);
             }
             if (typeof (Guild.prefix) === 'undefined') {
-                Guild.prefix = '!w.';
-                winston.debug(`Guild:${msg.channel.guild.id}|${msg.channel.guild.name} setting prefix to !w.`);
+                Guild.prefix = '$';
+                winston.debug(`Guild:${msg.channel.guild.id}|${msg.channel.guild.name} setting prefix to $`);
             }
             return Guild;
         } else {
             winston.debug(`There was no Guild attached to the msg, using default settings!`);
-            return { prefix: '!w.', lng: 'en' };
+            return { prefix: '$', lng: 'en' };
         }
     }
 

@@ -58,7 +58,7 @@ class BotInfo extends Command {
             }
         };
         msg.channel.createMessage(reply).then().catch(err => {
-            // console.error(err);
+            console.error(err);
         });
     }
 

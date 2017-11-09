@@ -87,9 +87,11 @@ class YoutubeImporter extends BasicImporter {
         });
         for (let i = 0; i < formats.length; i++) {
             if (formats[i].itag === '251') {
+                console.log(formats[i].itag);
                 return formats[i].url;
             }
             if (formats[i].itag === '250') {
+                console.log(formats[i].itag);
                 return formats[i].url;
             }
         }

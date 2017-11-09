@@ -6,7 +6,7 @@ let fs = require("fs");
 var files = fs.readdirSync("../kanji/");
 var dictionary = JSON.parse(fs.readFileSync("../kanji/kanji.json"));
 
-function kanjiEmbed(entry) {
+function kanjiEmbed(msg, entry) {
     var meanings = [];
     for (var i = 0; i < entry["meanings"].length; ++i) {
         var meaning = entry["meanings"][i];
@@ -79,7 +79,7 @@ class Kanji extends Command {
             return;
         }
 
-        let message = (kanji in dictionary) ? kanjiEmbed(dictionary[kanji]) : "";
+        let message = (kanji in dictionary) ? kanjiEmbed(msg, dictionary[kanji]) : "";
 
         pnfs.readFile("../kanji/" + kanjiFile)
             .then(buffer => msg.channel.createMessage(message , {

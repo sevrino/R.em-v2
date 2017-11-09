@@ -27,8 +27,6 @@ const blocked = require('blocked');
 if (remConfig.use_ws) {
     const procToWs = require('./ws/procToWs');
     const hub = new procToWs();
-} else {
-    const hub = undefined;
 }
 // let memwatch = require('memwatch-next');
 // memwatch.on('leak', function(info) {
@@ -149,7 +147,7 @@ class Shard {
                 this.HUB.send({action: 'updateState', d: {state: 'discord_ready'}});
             }
             // console.log('READY!');
-            this.bot.editStatus('online', {name: 'Help: !w.help'});
+            this.bot.editStatus('online', {name: 'Help: $help'});
             this.clientReady();
         });
         this.bot.on('messageCreate', (msg) => {
@@ -228,7 +226,7 @@ class Shard {
 
     messageUpdate(message, oldMessage) {
         if (this.ready) {
-            if (message.channel.guild.id == "203238995117867008" && message.author && !message.author.bot) {
+            /*if (message.channel.guild.id == "203238995117867008" && message.author && !message.author.bot) {
                 if (message && oldMessage && (!message.content && !oldMessage.content || message.content == oldMessage.content)) {
                     // both messages have empty content, this is an Embed "edit"
                     // both messages have same content, this is Discord adding an Embed to a link
@@ -260,7 +258,7 @@ class Shard {
                 if (message.author.staticAvatarURL)
                     embed["embed"]["author"]["icon_url"] = message.author.staticAvatarURL
                 this.bot.createMessage("275150545243602944", embed);
-            }
+            }*/
         }
     }
 
@@ -282,7 +280,7 @@ class Shard {
                     levelEnabled: true,
                     pmNotifications: true,
                     chNotifications: false,
-                    prefix: '!w.',
+                    prefix: '$',
                     lng: 'en'
                 });
                 guild.save((err) => {

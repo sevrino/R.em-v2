@@ -34,7 +34,7 @@ class GuildManager extends Manager {
             levelEnabled: true,
             pmNotifications: true,
             chNotifications: false,
-            prefix: '!w.',
+            prefix: '$',
             lng: 'en'
         });
         return guild.save();

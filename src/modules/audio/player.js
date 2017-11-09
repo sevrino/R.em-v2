@@ -51,22 +51,29 @@ class Player extends EventEmitter {
                 case SongTypes.youtube: {
                     options.resolve = true;
                     if (Song.isOpus) {
+                        console.log("Opus")
                         if (!remConfig.use_crystal) {
+                            console.log("Not Crystal")
                             try {
                                 link = new WolkeStream(Song.streamUrl);
                             } catch (e) {
+                                console.log("File ended?")
                                 console.error(e);
                                 return this.nextSong(Song);
                             }
                         } else {
+                            console.log("Crystal")
                             link = Song.url;
                         }
                         options.format = 'webm';
                         options.frameDuration = 20;
                     } else {
+                        console.log("Not Opus")
                         if (remConfig.use_crystal) {
+                            console.log("Crystal")
                             link = Song.url;
                         } else {
+                            console.log("Not Crystal")
                             link = Song.streamUrl;
                         }
                         options.inputArgs = ["-reconnect", "1", "-reconnect_streamed", "1", "-reconnect_delay_max", "2"];

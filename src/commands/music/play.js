@@ -87,7 +87,7 @@ class Play extends Command {
             if (err) {
                 return msg.channel.createMessage(this.t(err, {lngs: msg.lang}));
             }
-            msg.content = `!w.play https://youtube.com/watch?v=${results[number - 1].id}`;
+            msg.content = `$play https://youtube.com/watch?v=${results[number - 1].id}`;
             if (next) {
                 msg.content += ' -next';
             }

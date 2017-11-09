@@ -19,7 +19,7 @@ class Master extends Command {
 
         if (msg.author.id === config.owner_id) {
             msg.channel.createMessage('O ' + mention(msg.author) + '-sama, truly, you are my Master :bow:');
-        } else if (msg.author.id % 7 == 1) {
+        } else if ((msg.author.id.slice(-1) % 2) == 1) {
             msg.channel.createMessage('Sorry, my Master is someone else...');
             setTimeout(function () {
                 msg.channel.createMessage('*Hey... It\'s a secret, but I think Ram likes you* :blush: ');

@@ -15,7 +15,7 @@ class RemoveMessages extends Command {
         this.t = t;
         this.accessLevel = 0;
         this.msg = null;
-        this.example = '!w.rm 100 -cr';
+        this.example = '$rm 100 -cr';
         this.aliases = ['purge', 'prune'];
     }
 

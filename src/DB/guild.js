@@ -10,7 +10,7 @@ let guildSchema = mongoose.Schema({
     nsfwChannels: [],
     roles: [],
     settings: [],
-    prefix: {type: String, default: '!w.'},
+    prefix: {type: String, default: '$'},
     lng: {type: String, default: 'en'},
     levelEnabled: Boolean,
     pmNotifications: Boolean,

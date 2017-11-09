@@ -71,7 +71,7 @@ class AddToQueue extends Command {
             if (err) {
                 return msg.channel.createMessage(this.t(err, {lngs: msg.lang}));
             }
-            msg.content = `!w.qa ${results[number - 1].url}`;
+            msg.content = `$qa ${results[number - 1].url}`;
             this.run(msg);
         });
     }
