@@ -61,5 +61,13 @@
     "ws": "^3.3.3",
     "youtube-dl": "^1.11.1",
     "ytdl-core": "^0.18.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaveLiArch/rem-v2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PaveLiArch/rem-v2/issues"
+  },
+  "homepage": "https://github.com/PaveLiArch/rem-v2#readme"
 }
