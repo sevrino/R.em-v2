@@ -34,6 +34,7 @@ class Radio extends Song {
             console.error('ws-ing');
             this.ws = new websocket(this.options.wsUrl);
             this.ws.on('open', () => {
+                this.ws.send('{"op":0,"d":{"auth":"Bearer null"}}');
                 this.connectionAttempts = 1;
             });
             this.ws.on('message', (msg, flags) => {
@@ -103,8 +104,16 @@ class Radio extends Song {
     onMessage (msg, flags) {
         try {
             let actualMessage = JSON.parse(msg);
-            if (actualMessage.song_name && actualMessage.artist_name) {
-                this.updateTitle(`${actualMessage.artist_name} - ${actualMessage.song_name} (${this.options.radio})`);
+            if (actualMessage.op == 1) {
+                let title = actualMessage.d.song.title;
+                let artists = actualMessage.d.song.artists.map(function(artist) {
+                    if (artist.nameRomaji) {
+                        return `${artist.name} (${artist.nameRomaji})`;
+                    } else {
+                        return artist.name;
+                    }
+                }).join(', ');
+                this.updateTitle(`${artists} - ${title} (${this.options.radio})`);
             }
         } catch (e) {
             if (msg !== '') {
