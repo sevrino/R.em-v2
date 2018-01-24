@@ -33,15 +33,27 @@ class Radio extends Song {
         if (this.options.wsUrl) {
             console.error('ws-ing');
             this.ws = new websocket(this.options.wsUrl);
+            let heartbeatTimer;
             this.ws.on('open', () => {
                 this.ws.send('{"op":0,"d":{"auth":"Bearer null"}}');
                 this.connectionAttempts = 1;
+                let ws = this.ws;
+                heartbeatTimer = setTimeout(function tick() {
+                    ws.send('{"op":9}');
+                    heartbeatTimer = setTimeout(tick, 44500);
+                }, 44500);
             });
             this.ws.on('message', (msg, flags) => {
                 this.onMessage(msg, flags)
             });
-            this.ws.on('error', (err) => this.onError(err));
-            this.ws.on('close', (code, number) => this.onDisconnect(code, number));
+            this.ws.on('error', (err) => {
+                clearTimeout(heartbeatTimer);
+                this.onError(err);
+            });
+            this.ws.on('close', (code, number) => {
+                clearTimeout(heartbeatTimer);
+                this.onDisconnect(code, number);
+            });
         } else {
             console.error('icy-ing');
             var radio = this;
