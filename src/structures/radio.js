@@ -12,11 +12,12 @@ class Radio extends Song {
         this.options = options;
         this.ws = null;
         this.icyRequest = null;
+        this.heartbeatTimer = null;
         this.ended = false;
         this.toJSON = function () {
             var result = {};
             for (var x in this) {
-                if (x !== "icyRequest" && x !== 'ws') {
+                if (x !== "icyRequest" && x !== 'ws' && x !== "heartbeatTimer") {
                     result[x] = this[x];
                 }
             }
@@ -33,25 +34,16 @@ class Radio extends Song {
         if (this.options.wsUrl) {
             console.error('ws-ing');
             this.ws = new websocket(this.options.wsUrl);
-            let heartbeatTimer;
             this.ws.on('open', () => {
-                this.ws.send('{"op":0,"d":{"auth":"Bearer null"}}');
-                this.connectionAttempts = 1;
-                let ws = this.ws;
-                heartbeatTimer = setTimeout(function tick() {
-                    ws.send('{"op":9}');
-                    heartbeatTimer = setTimeout(tick, 44500);
-                }, 44500);
+                this.onConnect()
             });
             this.ws.on('message', (msg, flags) => {
                 this.onMessage(msg, flags)
             });
             this.ws.on('error', (err) => {
-                clearTimeout(heartbeatTimer);
                 this.onError(err);
             });
             this.ws.on('close', (code, number) => {
-                clearTimeout(heartbeatTimer);
                 this.onDisconnect(code, number);
             });
         } else {
@@ -77,8 +69,13 @@ class Radio extends Song {
         }
     }
 
+    onConnect() {
+        this.ws.send('{"op":0,"d":{"auth":"Bearer null"}}');
+        this.connectionAttempts = 1;
+    }
 
     onError (err) {
+        clearInterval(this.heartbeatTimer);
         console.error(err);
         console.log(`ws error!`);
         // this.reconnect();
@@ -106,6 +103,7 @@ class Radio extends Song {
     }
 
     onDisconnect (code, number) {
+        clearInterval(this.heartbeatTimer);
         console.error(code);
         console.error(number);
         if (!this.ended) {
@@ -113,9 +111,20 @@ class Radio extends Song {
         }
     }
 
+    updateHeartbeatTimer (heartbeatTimeout) {
+        clearInterval(this.heartbeatTimer);
+        this.heartbeatTimer = setInterval(() => {
+            this.ws.send('{"op":9}');
+        }, heartbeatTimeout)
+    }
+
     onMessage (msg, flags) {
         try {
             let actualMessage = JSON.parse(msg);
+            if (actualMessage.op == 0) {
+                let heartbeatTimeout = actualMessage.d.heartbeat;
+                this.updateHeartbeatTimer(heartbeatTimeout);
+            }
             if (actualMessage.op == 1) {
                 let title = actualMessage.d.song.title;
                 let artists = actualMessage.d.song.artists.map(function(artist) {
