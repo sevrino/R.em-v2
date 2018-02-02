@@ -20,6 +20,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "apiai": "^4.0.3",
     "ascii-table": "0.0.9",
     "async": "^2.5.0",
     "axios": "^0.17.0",

@@ -103,6 +103,8 @@ If the installation fails, due to not being able to clone the git repo of it, re
   "lbsearch_sfw_key": "ibsear.ch key",
   "lbsearch_nsfw_key": "ibsearch.xxx key",
   "cleverbot_api_key": "cleverbot.com api key",
+  "dialogflow_api_key": "dialogflow api key"
+  "use_dialogflow": false,
   "mashape_key": "mashape key",
   "use_ws": false,
   "master_hostname": "not needed.",

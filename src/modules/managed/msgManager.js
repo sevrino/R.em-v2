@@ -9,8 +9,9 @@ let path = require('path');
 let StatsD = require('hot-shots');
 let dogstatsd = new StatsD({ host: remConfig.statsd_host });
 let stat = `rem_${remConfig.environment}`;
+let useDialogFlow = remConfig.use_dialogflow;
 class MessageManager extends Manager {
-    constructor({ cm, lm, gm, vm, um, pm, rm, sm, stm, mod }) {
+    constructor({ cm, dm, lm, gm, vm, um, pm, rm, sm, stm, mod }) {
         super();
         this.listenerCount('20');
         this.l = lm;
@@ -20,6 +21,7 @@ class MessageManager extends Manager {
         this.g = gm;
         this.p = pm;
         this.c = cm;
+        this.d = dm;
         this.sm = sm;
         this.s = stm;
         this.u = um;
@@ -156,8 +158,13 @@ class MessageManager extends Manager {
                                 node: 'fun.cleverbot'
                             }));
                         }
-                        this.s.logCmdStat(msg, 'cleverbot', true);
-                        this.c.talk(msg);
+                        if (useDialogFlow) {
+                            this.s.logCmdStat(msg, 'dialogflow', true);
+                            this.d.talk(msg);
+                        } else {
+                            this.s.logCmdStat(msg, 'cleverbot', true);
+                            this.c.talk(msg);
+                        }
 
                     } else if (msg.channel.guild) {
                         // this.r.filterReaction(msg);
@@ -212,7 +219,7 @@ class MessageManager extends Manager {
 }
 module.exports = {
     class: MessageManager,
-    deps: ['lm', 'vm', 'gm', 'um', 'pm', 'rm', 'cm', 'sm', 'stm'],
+    deps: ['lm', 'vm', 'gm', 'um', 'pm', 'rm', 'cm', 'dm', 'sm', 'stm'],
     async: true,
     shortcode: 'mm'
 };
