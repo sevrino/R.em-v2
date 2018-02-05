@@ -1,4 +1,4 @@
 [submodule "rem_translate"]
 	path = rem_translate
-	url = http://github.com/Tenchi2xh/rem_translate.git
+	url = https://github.com/Taumer/rem_translate.git
 	branch = master

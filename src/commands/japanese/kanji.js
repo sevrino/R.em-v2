@@ -60,6 +60,11 @@ class Kanji extends Command {
         this.cat = 'japanese';
         this.needGuild = false;
         this.t = t;
+        this.help = {
+            short: 'help.kanji.short',
+            usage: 'help.kanji.usage',
+            example: 'help.kanji.example'
+        };
         this.accessLevel = 0;
         this.needsArguments = true;
     }
