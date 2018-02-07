@@ -15,7 +15,7 @@ class Challenge extends Command {
             short: 'help.challenge.short',
             usage: 'help.challenge.usage',
             example: 'help.challenge.example'
-        }
+        };
         this.needsArguments = false;
     }
 
