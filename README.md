@@ -14,6 +14,9 @@
   
 -------------------
 
+## Noteworthy Forks
+There are some forks which deserve to be listed here since they added some new features to rem
+- PaveLiArcH: [https://github.com/PaveLiArcH/rem-v2](https://github.com/PaveLiArcH/rem-v2)
 ## Contributing Guidelines
 
 I will write those if people actually want to contribute. Until then: Just make it work good and fast. uwu
@@ -103,7 +106,7 @@ If the installation fails, due to not being able to clone the git repo of it, re
   "lbsearch_sfw_key": "ibsear.ch key",
   "lbsearch_nsfw_key": "ibsearch.xxx key",
   "cleverbot_api_key": "cleverbot.com api key",
-  "dialogflow_api_key": "dialogflow api key"
+  "dialogflow_api_key": "dialogflow api key",
   "use_dialogflow": false,
   "mashape_key": "mashape key",
   "use_ws": false,
