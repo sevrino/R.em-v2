@@ -42,7 +42,7 @@ class AddRadioToQueue extends Command {
             needsResolve: false,
             local: false,
             duration: 'live',
-            streamUrl: url,
+            streamUrl: streamUrl,
             live: true,
             needsYtdl: false,
             isOpus: false,
