@@ -35,10 +35,10 @@ class AddRadioToQueue extends Command {
         let msgSplit = msg.content.split(' ').splice(2, 1);
         let options = this.checkOptions(msgSplit);
         let radio = new Radio({
-            id: `fallout_fm_${Date.now()}`,
+            id: `radio_${Date.now()}`,
             type: SongTypes.radio,
             title: parsedUrl.hostname,
-            url: 'http://fallout.fm/',
+            url: 'http://' + parsedUrl.hostname + '/',
             needsResolve: false,
             local: false,
             duration: 'live',
