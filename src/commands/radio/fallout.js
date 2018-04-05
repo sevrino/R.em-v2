@@ -42,7 +42,7 @@ class AddFalloutToQueue extends Command {
             needsResolve: false,
             local: false,
             duration: 'live',
-            streamUrl: 'http://46.101.243.245:8000/falloutfm'.concat(number).concat('.ogg');,
+            streamUrl: 'http://46.101.243.245:8000/falloutfm' + number + '.ogg';,
             live: true,
             needsYtdl: false,
             isOpus: false,
