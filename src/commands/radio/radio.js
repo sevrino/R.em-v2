@@ -28,7 +28,7 @@ class AddRadioToQueue extends Command {
 
     async run(msg) {
         let streamUrl = msg.content.split(' ').splice(1);
-        if (number.length == 0) {
+        if (streamUrl.length == 0) {
           return msg.channel.createMessage(this.t('radio.need_url', {lngs: msg.lang}))
         }
         let parsedUrl = url.parse(streamUrl[0]);
