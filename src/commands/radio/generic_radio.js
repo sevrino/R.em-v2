@@ -2,13 +2,13 @@ let Command = require('../../structures/command');
 let _ = require("lodash");
 let Radio = require('../../structures/radio');
 let SongTypes = require('../../structures/constants').SONG_TYPES;
-let url = require("url");
+let urlParser = require("url");
 /**
  * The addRadioToQueueCommand
  * @extends Command
  *
  */
-class AddRadioToQueue extends Command {
+class AddGenericRadioToQueue extends Command {
     /**
      * Create the command
      * @param {Function} t - the translation module
@@ -17,7 +17,7 @@ class AddRadioToQueue extends Command {
      */
     constructor({t, v, mod}) {
         super();
-        this.cmd = 'radio';
+        this.cmd = 'genericradio';
         this.cat = 'radio';
         this.needGuild = true;
         this.t = t;
@@ -31,7 +31,7 @@ class AddRadioToQueue extends Command {
         if (streamUrl.length == 0) {
           return msg.channel.createMessage(this.t('radio.need_url', {lngs: msg.lang}))
         }
-        let parsedUrl = url.parse(streamUrl[0]);
+        let parsedUrl = urlParser.parse(streamUrl[0]);
         let msgSplit = msg.content.split(' ').splice(2, 1);
         let options = this.checkOptions(msgSplit);
         let radio = new Radio({
@@ -42,7 +42,7 @@ class AddRadioToQueue extends Command {
             needsResolve: false,
             local: false,
             duration: 'live',
-            streamUrl: streamUrl,
+            streamUrl: parsedUrl.href,
             live: true,
             needsYtdl: false,
             isOpus: false,
@@ -85,4 +85,4 @@ class AddRadioToQueue extends Command {
         return {next, instant};
     }
 }
-module.exports = AddRadioToQueue;
+module.exports = AddGenericRadioToQueue;
