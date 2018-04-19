@@ -13,7 +13,6 @@ let useDialogFlow = remConfig.use_dialogflow;
 class MessageManager extends Manager {
     constructor({ cm, dm, lm, gm, vm, um, pm, rm, sm, stm, mod }) {
         super();
-        this.listenerCount('20');
         this.l = lm;
         this.v = vm;
         this.lngs = lm.getList();

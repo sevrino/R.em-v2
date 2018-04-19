@@ -13,7 +13,6 @@ let Backend = require('i18next-node-fs-backend');
 class LangManager extends Manager {
     constructor() {
         super();
-        this.listenerCount('1');
         this.commands = {};
         this.i18next = i18next;
         this.t = null;
