@@ -28,10 +28,12 @@ class AddGenericRadioToQueue extends Command {
 
     async run(msg) {
         let streamUrl = msg.content.split(' ').splice(1);
-        if (streamUrl.length == 0) {
+        if (streamUrl.length === 0) {
           return msg.channel.createMessage(this.t('radio.need_url', {lngs: msg.lang}))
         }
         let parsedUrl = urlParser.parse(streamUrl[0]);
+        console.error(parsedUrl.href);
+        console.error(parsedUrl.hostname);
         let msgSplit = msg.content.split(' ').splice(2, 1);
         let options = this.checkOptions(msgSplit);
         let radio = new Radio({
