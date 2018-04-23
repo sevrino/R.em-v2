@@ -3,7 +3,6 @@
  */
 let Command = require('../../structures/command');
 let axios = require('axios');
-let winston = require('winston');
 const Menu = require('../../structures/menu');
 class AnimeSearch extends Command {
     constructor({t}) {
@@ -20,35 +19,56 @@ class AnimeSearch extends Command {
         let searchQuery = msg.content.substring(msg.prefix.length + this.cmd.length + 1);
         if (!searchQuery) return await msg.channel.createMessage(this.t('generic.empty-search', {lngs: msg.lang}));
         try {
-            let authRequest = await axios.post(`https://anilist.co/api/auth/access_token`, {
-                grant_type: 'client_credentials',
-                client_id: remConfig.anilist_id,
-                client_secret: remConfig.anilist_secret
-            });
-            let accessToken = authRequest.data.access_token;
             let animeRequest = await axios({
-                url: `https://anilist.co/api/anime/search/${encodeURI(searchQuery)}`,
-                params: {access_token: accessToken}
-            });
-            if (animeRequest.data.error) {
-                if (animeRequest.data.error.messages[0] === 'No Results.') {
-                    return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
+                url: `https://graphql.anilist.co/`,
+                method: `post`,
+                data: {
+                    query: `query {
+                          Page {
+                            media(search: "${searchQuery}", type: ANIME) {
+                              id
+                              title {
+                                romaji
+                                english
+                              }
+                              coverImage {
+                                large
+                              }
+                              description
+                              genres
+                              averageScore
+                              episodes
+                            }
+                          }
+                        }`
                 }
+            });
+            if (animeRequest.data.data.Page.media.length === 0) {
+                return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
             }
-            if (animeRequest.data.length === 1) {
-                let characters = await this.loadCharacters(animeRequest.data[0].id, accessToken);
-                let embed = this.buildResponse(msg, animeRequest.data[0], characters);
+            if (animeRequest.data.data.Page.media.length === 1) {
+                let characters = await this.loadCharacters(animeRequest.data.data.Page.media[0]);
+                let embed = this.buildResponse(msg, animeRequest.data.data.Page.media[0], characters);
                 return msg.channel.createMessage(embed);
-            } else if (animeRequest.data.length > 1) {
-                let pick = await new Menu(this.t('search.anime', {lngs: msg.lang}), this.t('menu.guide', {lngs: msg.lang}), animeRequest.data.map(a => {
-                    return (a.title_english !== a.title_romaji ? `${a.title_romaji} | ${a.title_english}` : a.title_romaji)
+            } else if (animeRequest.data.data.Page.media.length > 1) {
+                let pick = await new Menu(this.t('search.anime', {lngs: msg.lang}), this.t('menu.guide', {lngs: msg.lang}), animeRequest.data.data.Page.media.map(a => {
+                    if (a.title.english !== a.title.romaji) {
+                        if (a.title.english === null) {
+                            return a.title.romaji
+                        } else {
+                            return `${a.title.romaji} | ${a.title.english}`
+                        }
+                    } else {
+                        return a.title.romaji
+                    }
                 }).slice(0, 10), this.t, msg);
                 if (pick === -1) {
                     return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
                 }
                 if (pick > -1) {
-                    let anime = animeRequest.data[pick];
-                    let characters = await this.loadCharacters(anime.id, accessToken);
+                    let anime = animeRequest.data.data.Page.media[pick];
+
+                    let characters = await this.loadCharacters(anime.id);
                     let embed = this.buildResponse(msg, anime, characters);
                     return msg.channel.createMessage(embed);
                 }
@@ -61,17 +81,35 @@ class AnimeSearch extends Command {
         }
     }
 
-    async loadCharacters(id, token) {
+    async loadCharacters(id) {
         let characterRequest = await axios({
-            url: `https://anilist.co/api/anime/${id}/characters`,
-            params: {access_token: token}
+            url: `https://graphql.anilist.co/`,
+            method: `post`,
+            data: {
+                query: `query {
+                      Media(id: ${id}, type: ANIME) {
+                        characters(page: 1, sort: [ROLE]) {
+                          edges {
+                            role
+                            node {
+                              id
+                              name {
+                                first
+                                last
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }`
+            }
         });
-        return characterRequest.data.characters;
+        return characterRequest.data.data.Media.characters.edges;
     }
 
     buildResponse(msg, data, characters) {
         let description = data.description.replace(/<br>/g, '');
-        description = description.replace(/\n|\\n/g, '');
+        description = description.replace(/\n|\r|\\n|\\r/g, '');
         description = description.replace(/&mdash;/g, '');
         description = description.replace(/&#039;/g, '');
         description = description.split('.').join('.\n\n');
@@ -80,13 +118,22 @@ class AnimeSearch extends Command {
             description += '...';
         }
         let mainCharacters = characters.filter((c) => {
-            return c.role === 'Main';
+            return c.role === 'MAIN';
         });
         let characterString = mainCharacters.map(c => {
-            return `[${c.name_first}${c.name_last ? ` ${c.name_last}` : ''}](https://anilist.co/character/${c.id})`
+            return `[${c.node.name.first}${c.node.name.last ? ` ${c.node.name.last}` : ''}](https://anilist.co/character/${c.node.id})`
         });
         characterString = characterString.join(', ');
-        let titleString = data.title_english !== data.title_romaji ? `${data.title_romaji} | ${data.title_english}` : data.title_romaji;
+        let titleString = "";
+        if (data.title.english !== data.title.romaji) {
+            if (data.title.english === null) {
+                titleString = data.title.romaji;
+            } else {
+                titleString = `${data.title.romaji} | ${data.title.english}`;
+            }
+        } else {
+            titleString = data.title.romaji;
+        }
         return {
             embed: {
                 "title": titleString,
@@ -94,10 +141,10 @@ class AnimeSearch extends Command {
                 "url": `https://anilist.co/anime/${data.id}/`,
                 "color": 0x00ADFF,
                 "footer": {
-                    "text": `⭐${this.t('anime.score', {lngs: msg.lang})}: ${data.average_score}/100`
+                    "text": `⭐${this.t('anime.score', {lngs: msg.lang})}: ${data.averageScore !== null ? data.averageScore : 0}/100`
                 },
                 "image": {
-                    "url": data.image_url_lge
+                    "url": data.coverImage.large
                 },
                 "fields": [
                     {
@@ -106,7 +153,7 @@ class AnimeSearch extends Command {
                     },
                     {
                         "name": `:1234: ${this.t('anime.episodes', {lngs: msg.lang})}`,
-                        "value": `**${data.total_episodes > 0 ? data.total_episodes : `${this.t('generic.unknown', {lngs: msg.lang})}` }**`
+                        "value": `**${data.episodes > 0 ? data.episodes : `${this.t('generic.unknown', {lngs: msg.lang})}` }**`
                     },
                     {
                         "name": `:man_dancing: ${this.t('anime.characters', {lngs: msg.lang})}`,
