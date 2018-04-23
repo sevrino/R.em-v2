@@ -48,7 +48,7 @@ class MangaSearch extends Command {
                 return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
             }
             if (mangaRequest.data.data.Page.media.length === 1) {
-                let characters = await this.loadCharacters(mangaRequest.data.data.Page.media[0]);
+                let characters = await this.loadCharacters(mangaRequest.data.data.Page.media[0].id);
                 let embed = this.buildResponse(msg, mangaRequest.data.data.Page.media[0], characters);
                 return msg.channel.createMessage(embed);
             } else if (mangaRequest.data.data.Page.media.length > 1) {
