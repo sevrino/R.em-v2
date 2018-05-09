@@ -101,8 +101,6 @@ If the installation fails, due to not being able to clone the git repo of it, re
   "osu_password": "osu password",
   "soundcloud_key": "key for the soundcloud api",
   "sentry_token": "not needed.",
-  "anilist_secret": "not used atm",
-  "anilist_id": "not used atm",
   "lbsearch_sfw_key": "ibsear.ch key",
   "lbsearch_nsfw_key": "ibsearch.xxx key",
   "cleverbot_api_key": "cleverbot.com api key",

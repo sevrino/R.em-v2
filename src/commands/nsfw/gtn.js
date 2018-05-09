@@ -19,7 +19,7 @@ class GtnImage extends Command {
 
     run(msg) {
         // Force commands to only run in NSFW channels
-        if (!msg.channel.name.startsWith('nsfw') && (!(msg.channel instanceof GuildChannel) || !msg.channel.nsfw)) {
+        if (!(msg.channel instanceof GuildChannel) || !msg.channel.nsfw) {
             return msg.channel.createMessage(this.t('nsfw-images.error-discord-not-nsfw-channel', {lngs: msg.lang}));
         }
         request.get('https://rra.ram.moe/i/r', {qs: {'type': 'nsfw-gtn', 'nsfw': true}}, (err, result, body) => {

@@ -26,34 +26,45 @@ class AnimeSearch extends Command {
         let searchQuery = msg.content.substring(msg.prefix.length + this.cmd.length + 1);
         if (!searchQuery) return await msg.channel.createMessage(this.t('generic.empty-search', {lngs: msg.lang}));
         try {
-            let authRequest = await axios.post(`https://anilist.co/api/auth/access_token`, {
-                grant_type: 'client_credentials',
-                client_id: remConfig.anilist_id,
-                client_secret: remConfig.anilist_secret
-            });
-            let accessToken = authRequest.data.access_token;
             let characterRequest = await axios({
-                url: `https://anilist.co/api/character/search/${encodeURI(searchQuery)}`,
-                params: {access_token: accessToken}
-            });
-            if (characterRequest.data.error) {
-                if (characterRequest.data.error.messages[0] === 'No Results.') {
-                    return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
+                url: `https://graphql.anilist.co/`,
+                method: `post`,
+                data: {
+                    query: `query {
+                              Page {
+                                characters(search: "${searchQuery}") {
+                                  id
+                                  name {
+                                    first
+                                    last
+                                    native
+                                  }
+                                  image {
+                                    medium
+                                    large
+                                  }
+                                  description
+                                }
+                              }
+                            }`
                 }
+            });
+            if (characterRequest.data.data.Page.characters.length === 0) {
+                return msg.channel.createMessage(this.t('define.no-result', {lngs: msg.lang, term: searchQuery}));
             }
             // console.log(characterRequest.data);
-            if (characterRequest.data.length === 1) {
-                let embed = this.buildResponse(characterRequest.data[0]);
+            if (characterRequest.data.data.Page.characters.length === 1) {
+                let embed = this.buildResponse(characterRequest.data.data.Page.characters[0]);
                 return msg.channel.createMessage(embed);
-            } else if (characterRequest.data.length > 1) {
-                let pick = await new Menu(this.t('search.anime', {lngs: msg.lang}), this.t('menu.guide', {lngs: msg.lang}), characterRequest.data.map(c => {
-                    return `${c.name_first} ${c.name_last ? c.name_last : ''} ${c.name_japanese ? ('(' + c.name_japanese + ')') : ''}`
+            } else if (characterRequest.data.data.Page.characters.length > 1) {
+                let pick = await new Menu(this.t('search.anime', {lngs: msg.lang}), this.t('menu.guide', {lngs: msg.lang}), characterRequest.data.data.Page.characters.map(c => {
+                    return `${c.name.first} ${c.name.last ? c.name.last : ''} ${c.name.native ? ('(' + c.name.native + ')') : ''}`
                 }).slice(0, 15), this.t, msg);
                 if (pick === -1) {
                     return msg.channel.createMessage(this.t('generic.cancelled-command', {lngs: msg.lang}));
                 }
                 if (pick > -1) {
-                    let character = characterRequest.data[pick];
+                    let character = characterRequest.data.data.Page.characters[pick];
                     let embed = this.buildResponse(character);
                     return msg.channel.createMessage(embed);
                 }
@@ -68,7 +79,7 @@ class AnimeSearch extends Command {
 
     buildResponse(data) {
         // console.log(data);
-        let info = data.info.replace(/<br>/g, '');
+        let info = data.description.replace(/<br>/g, '');
         info = info.replace(/\n|\\n/g, '');
         info = info.replace(/&mdash;/g, '');
         info = info.replace(/&#039;/g, '');
@@ -80,7 +91,7 @@ class AnimeSearch extends Command {
             info = info.substring(0, 1020);
             info += '...';
         }
-        let titleString = `${data.name_first} ${data.name_last ? data.name_last : ''} ${data.name_japanese ? ('(' + data.name_japanese + ')') : ''}`;
+        let titleString = `${data.name.first} ${data.name.last ? data.name.last : ''} ${data.name.native ? ('(' + data.name.native + ')') : ''}`;
         return {
             embed: {
                 "title": titleString,
@@ -88,7 +99,7 @@ class AnimeSearch extends Command {
                 "url": `https://anilist.co/character/${data.id}/`,
                 "color": 0x00ADFF,
                 "image": {
-                    "url": data.image_url_lge
+                    "url": data.image.large
                 }
             }
         };
