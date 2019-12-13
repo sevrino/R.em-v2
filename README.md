@@ -1,7 +1,7 @@
 <h1 align="center">
     <a href="https://discord.gg/rem"><img src="http://i.imgur.com/1lPOnSm.jpg" width="256px" alt="Rem"></a>
   <br>
-    R.em(replica)
+    R.em(REPLICA)
   <br>
  </h1>
 <h4 align="center">The rewrite of Rem, now even cleaner and soon fully documented. This is rem-v2's fork. This is the replica version that fixed the bug in rem-v2.</h4>
