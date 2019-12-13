@@ -1,10 +1,10 @@
 <h1 align="center">
     <a href="https://discord.gg/rem"><img src="http://i.imgur.com/1lPOnSm.jpg" width="256px" alt="Rem"></a>
   <br>
-    Rem
+    R.em(replica)
   <br>
  </h1>
-<h4 align="center">The rewrite of Rem, now even cleaner and soon fully documented.</h4>
+<h4 align="center">The rewrite of Rem, now even cleaner and soon fully documented. This is rem-v2's fork. This is the replica version that fixed the bug in rem-v2.</h4>
 <h5 align="center">This Code is provided as is, there will be no support for getting it to run.</h5>
   <p align="center">
       <a href="https://discord.gg/yuTxmYn" target="_blank"><img src="https://discordapp.com/api/guilds/206530953391243275/embed.png" alt="Discord"></a>
